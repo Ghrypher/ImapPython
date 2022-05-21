@@ -1,4 +1,3 @@
-import email
 import imaplib
 
 EMAIL = 'gamexconsoles@gmail.com'
@@ -9,12 +8,12 @@ SERVER = 'imap.gmail.com'
 mail = imaplib.IMAP4_SSL(SERVER)
 mail.login(EMAIL, PASSWORD)
 # we choose the inbox but you can select others
-mail.select('inbox')
+mail.select('[Gmail]/Borradores')
 
 # we'll search using the ALL criteria to retrieve
 # every message inside the inbox
 # it will return with its status and a list of ids
-status, data = mail.search(None, '(SUBJECT "puerbo app")')
+status, data = mail.search(None, 'ALL')
 # the list returned is a list of bytes separated
 # by white spaces on this format: [b'1 2 3', b'4 5 6']
 # so, to separate it first we create an empty list

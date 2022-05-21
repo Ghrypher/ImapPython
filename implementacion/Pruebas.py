@@ -7,15 +7,22 @@ SERVER = 'imap.gmail.com'
 mail = imaplib.IMAP4_SSL(SERVER)
 mail.login(EMAIL, PASSWORD)
 
-mail.select('inbox')
+mailboxResponse= mail.lsub("[Gmail]")
+mailboxes=mailboxResponse[1]
+print("\n")
+print(mailboxes)
+print("\n")
 
-mail_ids = []
+#getmailbox name
+for mailbox in mailboxes:
+    mailboxName = mailbox.split()
+    
+    mailboxName[3] = str(mailboxName[3]).replace("b","") 
+    mailboxName[3] = str(mailboxName[3]).replace("'","")
+    print(str(mailboxName[3]))
 
-status, data = mail.search(None, 'ALL')
 
-for block in data:
-    mail_ids += block.split()
+mail.select()
 
-for i in mail_ids:
-    status, data = mail.fetch(i, '(RFC822)')
-    print(status, data)
+#.lsub("aca va el parecido")  sirve para listar los mailboxes disponibles
+#.select("nombre de la mailbox") sirve para entrar en la mailbox deseada
