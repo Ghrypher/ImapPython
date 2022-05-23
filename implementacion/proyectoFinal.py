@@ -1,4 +1,5 @@
 import imaplib
+from operator import truediv
 
 #embellecedor y bienvenida
 print("\n" * 9)
@@ -14,7 +15,7 @@ while True:
         imap.login(email, password)
         print("\n" * 5)
         break
-    except:
+    except Exception:
         print("contraseña o usuario incorrecto ")
         print("\n")
 
@@ -57,3 +58,11 @@ while True:
         for i in range(len(mailBoxOptions)):
             print('"' + mailBoxOptions[i] + '"')
         
+while True:
+    print("desea filtrar los mails en esta bandeja?s/n")
+    respuesta = input()
+    if respuesta == "s"  or respuesta == "si" or respuesta == "y" or respuesta == "yes":
+        break
+    elif respuesta == "n"  or respuesta == "no":
+        break
+
