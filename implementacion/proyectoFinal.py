@@ -2,14 +2,20 @@ import imaplib
 import email
 
 def seleccionarFiltro(imap):
+    print("""Binevenido al sistema de filtrado porfavor eliga un tipo de filtro de los siguientes:
+    1-
+    2-
+    3- 
+    4- No usar filtro
+
+    """)
+    opcion = input("deseo utilizar el filtro ")
     return imap, "ALL"
-
-
 
 
 #embellecedor y bienvenida
 print("\n" * 9)
-print("Binevenido a la interfaz basada en texto para usar IMAP")
+print("Binevenido a la interfaz basada en texto para usar IMAP con gmail")
 print("porfavor ingrese su email y contraseña a continuacion")
 
 imap = imaplib.IMAP4_SSL('imap.gmail.com')
@@ -45,16 +51,16 @@ for mailBox in mailBoxes:
 print("")
 print("elija la bandeja de entrada que desea revisar")
 while True:
-    respuesta = input()
+    respuesta = input("utilizar la bandeja ")
     if respuesta in mailBoxOptions:
         print("\n")
         print("accediendo a la baneja " + respuesta) 
-        imap.select('[Gmail]/Borradores')
+        imap.select(respuesta)
         break
     elif respuesta.upper() in mailBoxOptions:
         print("\n")
         print("accediendo a la baneja " + respuesta.upper()) 
-        imap.select('[Gmail]/Borradores')
+        imap.select(respuesta.upper())
         break
     else:
         print("\n" * 3)
