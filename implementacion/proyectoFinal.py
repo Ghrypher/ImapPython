@@ -16,13 +16,22 @@ def seleccionarFiltro(imap):
 #embellecedor y bienvenida
 print("\n" * 9)
 print("Binevenido a la interfaz basada en texto para usar IMAP con gmail")
-print("porfavor ingrese su email y contraseña a continuacion")
+
 
 imap = imaplib.IMAP4_SSL('imap.gmail.com')
 
 while True:
-    user = 'gamexconsoles@gmail.com'#input("Email:   ")
-    password = '252943Qmm' #input("Password:   ")
+    respuesta = input("Desea usar una cuenta preconfiguarada?(s/n)   ")
+    if respuesta in["s", "y", "si", "yes"]:
+        user = 'gamexconsoles@gmail.com'#input("Email:   ")
+        password = 'khdugnhuxiiktrej' #input("Password:   ")
+    else:
+        print("""(tenga en cuenta que de no estar configurada su cuenta es probable que no pueda iniciar sesion)
+        
+        porfavor ingrese su email y contraseña a continuacion
+         """)
+        user = input("Email:   ")
+        password = input("Password:   ")
     try:
         imap.login(user, password)
         print("\n" * 5)
@@ -32,20 +41,23 @@ while True:
         print("\n")
 
 
-mailBoxes = imap.lsub("[Gmail]")
+mailBoxes = imap.list()
 mailBoxes = mailBoxes[1]
-mailBoxOptions = ["INBOX"]
-print('"INBOX"')
+mailBoxOptions = []
+
+print(mailBoxes) 
+
 #getmailbox name
 for mailBox in mailBoxes:
     mailBoxName = mailBox.split()
-    
-    mailBoxName[3] = str(mailBoxName[3]).replace("b","") 
-    mailBoxName[3] = str(mailBoxName[3]).replace("'","")
-    print(str(mailBoxName[3]))
 
-    mailBoxName[3] = str(mailBoxName[3]).replace('"','') 
-    mailBoxOptions.append(str(mailBoxName[3]))
+    boxName = str(mailBoxName[(int(len(mailBoxName)) - 1)])
+    boxName = boxName.replace("b","") 
+    boxName = boxName.replace("'","")
+    print(boxName)
+
+    boxName = boxName.replace('"','') 
+    mailBoxOptions.append(boxName)
 
 #bandejas de entrada
 print("")
