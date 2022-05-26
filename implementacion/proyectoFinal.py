@@ -90,14 +90,15 @@ def seleccionarFiltro(complejo):
         while True:
             try:
                 opcion = input("deseo utilizar el filtro ")
-                opcion = filtrosSimples[int(opcion)]
-                argumento = input("Ingrese el argumento correspondiente para el filtro elegido")
+                opcion = filtrosComplejos[int(opcion)]
+                if opcion == "ALL":
+                    break
+                argumento = input("Ingrese el argumento correspondiente para el filtro elegido ")
                 break
             except:
                 print("El valor ingresado no era un numero o excedio el numero de opciones. Ingrese un numero")
 
     return opcion, argumento
-
 
 #embellecedor y bienvenida
 print("\n" * 9)
@@ -109,8 +110,8 @@ imap = imaplib.IMAP4_SSL('imap.gmail.com')
 while True:
     respuesta = input("Desea usar una cuenta preconfiguarada?(s/n)   ")
     if respuesta in["s", "y", "si", "yes"]:
-        user = 'gamexconsoles@gmail.com'#input("Email:   ")
-        password = 'khdugnhuxiiktrej' #input("Password:   ")
+        user = 'gamexconsoles@gmail.com'
+        password = 'khdugnhuxiiktrej' 
     else:
         print("""(tenga en cuenta que de no estar configurada su cuenta es probable que no pueda iniciar sesion)
         
