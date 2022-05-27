@@ -1,7 +1,8 @@
 import imaplib
+import email
 
 EMAIL = 'gamexconsoles@gmail.com'
-PASSWORD = '252943Qmm'
+PASSWORD = 'khdugnhuxiiktrej'
 SERVER = 'imap.gmail.com'
 
 # connect to the server and go to its inbox

@@ -1,6 +1,6 @@
 import imaplib
 import email
-from operator import truediv
+import getpass
 
 filtrosSimples = {
     1: "ANSWERED",
@@ -38,9 +38,11 @@ filtrosComplejos = {
 }
 
 def seleccionarFiltro(complejo):
-    opcion = ""
-    argumento = ""
-    if not complejo:
+
+    opcion = "" 
+    argumento = "" 
+
+    if not complejo: #Muestra todas las opciones de los filtros simples
         print("""Binevenido al sistema de filtrado porfavor eliga un tipo de filtro de los siguientes:
 
         A continuacion estan todos los filtros simples:
@@ -61,14 +63,15 @@ def seleccionarFiltro(complejo):
         14- No usar filtro""")
 
         while True:
-            try:
-                opcion = input("deseo utilizar el filtro ")
+            try: #Solicita el filtro que desea usar y lo busca en el diccionario
+                opcion = input("deseo utilizar el filtro numero:   ")
                 opcion = filtrosSimples[int(opcion)]
                 break
             except:
                 print("El valor ingresado no era un numero o excedio el numero de opciones. Ingrese un numero")
 
-    else:
+    else: #Muestra todas las opciones de los filtros complejos
+
         print("""Estos son todos los filtros complejos que requieren ingresar un argumento:
 
         1- Leer todos los mails que tengan el texto ingresado especificado en el campo BCC
@@ -85,15 +88,19 @@ def seleccionarFiltro(complejo):
         12- Leer todos los mails que tengan el texto ingresado como asunto
         13- Leer todos los mails que tengan el texto ingresado en la cabeza o el cuerpo del mail
         14- Leer todos los mails cuyo receptor coincida con la persona especificada
-        15- No usar filtro""")
+        15- No usar filtro
+        """)
 
         while True:
-            try:
-                opcion = input("deseo utilizar el filtro ")
+            try: #Solicita el filtro que desea usar y lo busca en el diccionario. Luego solicita el argumento para el filtro
+                opcion = input("deseo utilizar el filtro numero:   ")
                 opcion = filtrosComplejos[int(opcion)]
+                
                 if opcion == "ALL":
                     break
+
                 argumento = input("Ingrese el argumento correspondiente para el filtro elegido ")
+
                 break
             except:
                 print("El valor ingresado no era un numero o excedio el numero de opciones. Ingrese un numero")
@@ -105,39 +112,46 @@ print("\n" * 9)
 print("Binevenido a la interfaz basada en texto para usar IMAP con gmail")
 
 
-imap = imaplib.IMAP4_SSL('imap.gmail.com')
+imap = imaplib.IMAP4_SSL('imap.gmail.com') #Indica y setea que protocolo va a utilizar 
 
 while True:
     respuesta = input("Desea usar una cuenta preconfiguarada?(s/n)   ")
-    if respuesta in["s", "y", "si", "yes"]:
+
+    if respuesta in ["s", "y", "si", "yes"]: #Carga la cuenta predeterminada
         user = 'gamexconsoles@gmail.com'
         password = 'khdugnhuxiiktrej' 
-    else:
+
+    elif respuesta in ["n", "no"]: #Solicita el usuario y contraseña para poder ingresar a la cuenta
         print("""(tenga en cuenta que de no estar configurada su cuenta es probable que no pueda iniciar sesion)
         
         porfavor ingrese su email y contraseña a continuacion
          """)
         user = input("Email:   ")
-        password = input("Password:   ")
-    try:
+        password = getpass.getpass("Password:   ")
+
+    else:
+        print ("\nrespuesta esconocida\n")
+        continue
+
+    try: #Se logea a la cuenta con el usuario y contraseña ingresados
         imap.login(user, password)
         print("\n" * 5)
         break
+
     except Exception:
         print("contraseña o usuario incorrecto ")
         print("\n")
 
 
-mailBoxes = imap.list()
-mailBoxes = mailBoxes[1]
+mailBoxes = imap.list() #Obtiene una tupla con un "OK" y una lista con todas las carpetas del correo
+mailBoxes = mailBoxes[1] #Extrae la las carpetas del correo
 mailBoxOptions = []
 
-print(mailBoxes) 
-
 #getmailbox name
-for mailBox in mailBoxes:
-    mailBoxName = mailBox.split()
+for mailBox in mailBoxes: 
+    mailBoxName = mailBox.split() #Separa las diferentes carpetas del mail
 
+    #Obtiene una de las carpetas y las aprolija removiendo letras y caracteres innecesarios
     boxName = str(mailBoxName[(int(len(mailBoxName)) - 1)])
     boxName = boxName.replace("b","") 
     boxName = boxName.replace("'","")
@@ -149,18 +163,32 @@ for mailBox in mailBoxes:
 #bandejas de entrada
 print("")
 print("elija la bandeja de entrada que desea revisar")
+
 while True:
-    respuesta = input("utilizar la bandeja ")
-    if respuesta in mailBoxOptions:
+    respuesta = input("utilizar la bandeja ") #Solicita ingresar una de las carpetas obtenidas anteriormente
+
+    #Verifica si el valor ingresado es valido e ingresa a la carpeta especificada
+    if respuesta in mailBoxOptions: 
         print("\n")
         print("accediendo a la baneja " + respuesta) 
         imap.select(respuesta)
         break
+
+    #Verifica si el valor ingresado es valido e ingresa a la carpeta especificada
     elif respuesta.upper() in mailBoxOptions:
         print("\n")
         print("accediendo a la baneja " + respuesta.upper()) 
         imap.select(respuesta.upper())
         break
+
+    #Verifica si el valor ingresado es valido e ingresa a la carpeta especificada
+    elif ("[Gmail]/" + respuesta) in mailBoxOptions:
+        print("\n")
+        print("accediendo a la baneja " + ("[Gmail]/" + respuesta)) 
+        imap.select(("[Gmail]/" + respuesta))
+        break
+
+    #Solicita una carpeta valida y vuelve a mostrar las opciones
     else:
         print("\n" * 3)
         print("no posee esa badeja, intente denuevo")
@@ -171,20 +199,29 @@ while True:
 
 
 while True:
-        print("desea filtrar los mails en esta bandeja?s/n")
+        print("\n")
+        print("Desea filtrar los mails en esta bandeja?s/n") 
+        
         respuesta = input()
+        argumento= ""
+
         if respuesta in ["s", "y", "yes", "si"]:
             while True:
+
+                print("\n")
                 print("Desea utilizar filtros complejos? s/n")
                 respuesta = input()
+
                 if respuesta in ["s", "si", "y", "yes"]:
-                    print("Iniciando filtros complejos...")
+                    print("\nIniciando filtros complejos...")
                     filtro, argumento = seleccionarFiltro(True)
                     break
+
                 elif respuesta in ["n", "no"]:
-                    print("Iniciando filtros simples...")
+                    print("\nIniciando filtros simples...")
                     filtro, argumento = seleccionarFiltro(False)
                     break
+
                 else:
                     print("Ingrese el valor correspondiente: y/n")
             break
@@ -192,41 +229,43 @@ while True:
         elif respuesta in ["n", "no"]:
             filtro = "ALL"
             break
+
         else:
             print("El valor ingresado no es correcto. Ingrese y/n.")
 
 if argumento == "":
-    status, data = imap.search(None, filtro)
+    status, data = imap.search(None, filtro) #Busca en el mail los correos que coincidan con el filtro seleccionado
 else:
-    status, data = imap.search(None, filtro, argumento)
+    status, data = imap.search(None, filtro, argumento) #Busca en el mail los correos que coincidan con el filtro seleccionado y el argumento para dicho filtro
 
 idsMail = []
-for bloque in data:
-    idsMail += bloque.split()
+for bloque in data: #Recorre cada bloque de informacion con ids de los mails
+    idsMail += bloque.split() #Separa el bloque en una lista que contiene los diferentes ids por separado
 
 for i in idsMail:
 
-    status, data = imap.fetch(i, '(RFC822)')
+    status, data = imap.fetch(i, '(RFC822)') #Busca y obtiene informacion del mail en base al id del mismo
 
-    for response_part in data:
-        if isinstance(response_part, tuple):
-            message = email.message_from_bytes(response_part[1])
+    for response_part in data: #Data contiene una lista de tuplas con el cabezal, contenido y cierre 
+        if isinstance(response_part, tuple): #Si es una tupla
+            message = email.message_from_bytes(response_part[1]) #Buscamos directamente el contenido del mail 
 
-            mail_from = message['from']
-            mail_subject = message['subject']
+            mail_from = message['from'] #Obtenemos quien envio el mail
+            mail_subject = message['subject'] #Obtenemos el asunto del mail
 
-            if message.is_multipart():
+            if message.is_multipart(): #Si el contenido es multiparte, significando que tiene texto plano y otros datos como anexos o codigo html
                 mail_content = ''
 
-
-                for part in message.get_payload():
-
+                for part in message.get_payload(): #Recorremos parte por parte el mail
+                    
+                    #Si es texto plano lo extraemos
                     if part.get_content_type() == 'text/plain':
                         mail_content += part.get_payload()
             else:
+                
+                #Si es puro texto plano entonces lo extraemos todo de una
+                mail_content = message.get_payload() 
 
-                mail_content = message.get_payload()
-
-            print(f'From: {mail_from}')
-            print(f'Subject: {mail_subject}')
-            print(f'Content: {mail_content}')
+            print(f'From: {mail_from}') #Quien envio el mail
+            print(f'Subject: {mail_subject}') #Asunto del mail
+            print(f'Content: {mail_content}') #Contenido del mail
