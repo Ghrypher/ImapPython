@@ -1,15 +1,16 @@
 import imaplib
 import email
 
-EMAIL = 'gamexconsoles@gmail.com'
-PASSWORD = 'khdugnhuxiiktrej'
-SERVER = 'imap.gmail.com'
+EMAIL = 'dummym1@outlook.es'
+PASSWORD = '252943Qmm'
+SERVER = 'outlook.office365.com'
 
 # connect to the server and go to its inbox
 mail = imaplib.IMAP4_SSL(SERVER)
 mail.login(EMAIL, PASSWORD)
 # we choose the inbox but you can select others
-mail.select('[Gmail]/Borradores')
+print(mail.list())
+mail.select('INBOX')
 
 # we'll search using the ALL criteria to retrieve
 # every message inside the inbox

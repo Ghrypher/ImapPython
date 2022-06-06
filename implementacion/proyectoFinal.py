@@ -1,6 +1,7 @@
 import imaplib
 import email
 import getpass
+from re import S
 
 filtrosSimples = {
     1: "ANSWERED",
@@ -112,14 +113,14 @@ print("\n" * 9)
 print("Binevenido a la interfaz basada en texto para usar IMAP con gmail")
 
 
-imap = imaplib.IMAP4_SSL('imap.gmail.com') #Indica y setea que protocolo va a utilizar 
+imap = imaplib.IMAP4_SSL('outlook.office365.com') #Indica y setea que protocolo va a utilizar 
 
 while True:
     respuesta = input("Desea usar una cuenta preconfiguarada?(s/n)   ")
 
     if respuesta in ["s", "y", "si", "yes"]: #Carga la cuenta predeterminada
-        user = 'gamexconsoles@gmail.com'
-        password = 'khdugnhuxiiktrej' 
+        user = 'dummym1@outlook.es'
+        password = '252943Qmm' 
 
     elif respuesta in ["n", "no"]: #Solicita el usuario y contraseña para poder ingresar a la cuenta
         print("""(tenga en cuenta que de no estar configurada su cuenta es probable que no pueda iniciar sesion)
@@ -147,18 +148,28 @@ mailBoxes = imap.list() #Obtiene una tupla con un "OK" y una lista con todas las
 mailBoxes = mailBoxes[1] #Extrae la las carpetas del correo
 mailBoxOptions = []
 
+
 #getmailbox name
 for mailBox in mailBoxes: 
     mailBoxName = mailBox.split() #Separa las diferentes carpetas del mail
 
     #Obtiene una de las carpetas y las aprolija removiendo letras y caracteres innecesarios
-    boxName = str(mailBoxName[(int(len(mailBoxName)) - 1)])
+    boxName = str(mailBoxName[(len(mailBoxName) - 1)])
     boxName = boxName.replace("b","") 
     boxName = boxName.replace("'","")
-    print(boxName)
+    
 
     boxName = boxName.replace('"','') 
-    mailBoxOptions.append(boxName)
+    if boxName == "Inox":
+        print("Inbox")
+        mailBoxOptions.append("Inbox")
+
+    elif boxName == "Outox":
+        print("Outbox")
+        mailBoxOptions.append("Outbox")
+    else:
+        print(boxName)
+        mailBoxOptions.append(boxName)
 
 #bandejas de entrada
 print("")
@@ -268,4 +279,5 @@ for i in idsMail:
 
             print(f'From: {mail_from}') #Quien envio el mail
             print(f'Subject: {mail_subject}') #Asunto del mail
-            print(f'Content: {mail_content}') #Contenido del mail
+            print('Content')
+            print(mail_content) #Contenido del mail
